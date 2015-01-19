@@ -1,4 +1,10 @@
 
+import java.awt.Graphics;
+import java.awt.Image;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 
 /*
@@ -18,6 +24,34 @@ public class VentanaAhorcado extends javax.swing.JFrame {
     
     //contador para el numero de fallos
     int numeroFallos = 0;
+   
+    @Override
+    public void paint (Graphics g){
+      super.paintComponents(g);
+      g= jPanel1.getGraphics();
+      
+      //cargamos una imagen
+      Image miImagen= null;
+      
+        try {
+            
+            switch(numeroFallos){                
+                case 0: miImagen= ImageIO.read(getClass().getResource("/ahorcado_0.png")); break;
+                case 1: miImagen= ImageIO.read(getClass().getResource("/ahorcado_1.png")); break;
+                case 2: miImagen= ImageIO.read(getClass().getResource("/ahorcado_2.png")); break;
+                case 3: miImagen= ImageIO.read(getClass().getResource("/ahorcado_3.png")); break;
+                case 4: miImagen= ImageIO.read(getClass().getResource("/ahorcado_4.png")); break;
+                case 5: miImagen= ImageIO.read(getClass().getResource("/ahorcado_5.png")); break;
+                case-100:miImagen= ImageIO.read(getClass().getResource("/acertasteTodo.png")); break;
+                default:  miImagen= ImageIO.read(getClass().getResource("/ahorcado_fin.png")); break;
+                    
+            }
+            
+            
+        } catch (IOException ex) {
+        }
+       g.drawImage(miImagen, 0, 0, jPanel1.getWidth(),jPanel1.getHeight(),null);
+    }
     
     public VentanaAhorcado() {
         initComponents();
@@ -31,12 +65,28 @@ public class VentanaAhorcado extends javax.swing.JFrame {
         letra = letra.toUpperCase();
        if(palabraOculta.contains(letra)){ //la letra está en la palabra oculta
           //desocultar la letra en la pantalla
+           for (int i=0; i<palabraOculta.length(); i++){
+               if(palabraOculta.charAt(i)== letra.charAt(0)){
+                   //si hemos llegado aqui es por la letra
+                   //está en la palabraOculta
+                   palabraConGuiones=palabraConGuiones.substring(0, 2*i)+
+                           letra+
+                           palabraConGuiones.substring(2*i+1);
+               }
+           }
+           jLabel1.setText(palabraConGuiones);
           // quitar el guion bajo
        }
        else{ //la letra NO está en la palabra oculta
            numeroFallos++;
            jLabel2.setText(String.valueOf(numeroFallos));
        }
+       
+       //para ver si todas las letras están descubiertas
+       if(!palabraConGuiones.contains("_")){
+           numeroFallos= -100;
+       }
+       repaint();
     }
     //chequeo si el boton ha sido pulsado
     private void chequeaBoton(JButton miBoton){

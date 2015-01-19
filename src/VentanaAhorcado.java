@@ -31,6 +31,16 @@ public class VentanaAhorcado extends javax.swing.JFrame {
         letra = letra.toUpperCase();
        if(palabraOculta.contains(letra)){ //la letra está en la palabra oculta
           //desocultar la letra en la pantalla
+           for (int i=0; i<palabraOculta.length(); i++){
+               if(palabraOculta.charAt(i)== letra.charAt(0)){
+                   //si hemos llegado aqui es por la letra
+                   //está en la palabraOculta
+                   palabraConGuiones=palabraConGuiones.substring(0, 2*i)+
+                           letra+
+                           palabraConGuiones.substring(2*1+1);
+               }
+           }
+           jLabel1.setText(palabraConGuiones);
           // quitar el guion bajo
        }
        else{ //la letra NO está en la palabra oculta
